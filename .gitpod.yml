@@ -1,0 +1,45 @@
+tasks:
+  - name: Setup Java 17 and Build Finance App
+    init: |
+      # Install Java 17 via SDKMAN
+      sdk install java 17.0.15-tem
+      sdk default java 17.0.15-tem
+      
+      # Update JAVA_HOME and PATH for this session
+      export JAVA_HOME=$HOME/.sdkman/candidates/java/17.0.15-tem
+      export PATH=$JAVA_HOME/bin:$PATH
+      
+      # Verify setup
+      echo "Java version:"
+      java -version
+      echo "Maven version:"
+      mvn -version
+      
+      # Build the project
+      mvn clean install
+    command: |
+      # Ensure Java 17 is active
+      sdk default java 17.0.15-tem
+      export JAVA_HOME=$HOME/.sdkman/candidates/java/17.0.15-tem
+      export PATH=$JAVA_HOME/bin:$PATH
+      
+      # Verify Java version before starting
+      echo "Starting with Java version:"
+      java -version
+      
+      # Run Spring Boot application with dev profile
+      mvn spring-boot:run -Dspring-boot.run.profiles=dev
+ports:
+  - port: 8080
+    onOpen: open-preview
+vscode:
+  extensions:
+    - vscjava.vscode-spring-boot
+    - vscjava.vscode-maven
+    - redhat.java
+    - Pivotal.vscode-spring-boot
+    - eamodio.gitlens
+    - humao.rest-client
+# Ensure Java 17 environment
+image:
+  file: .gitpod.Dockerfile
